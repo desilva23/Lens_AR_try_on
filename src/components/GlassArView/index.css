@@ -92,10 +92,10 @@
     width: 100%;
     justify-content: center;
     align-items: center;
-    margin-left: 50% !important;
+    margin-top: 20px;
   }
   .JeelizVTOWidgetContainer {
-    width: 1000px;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

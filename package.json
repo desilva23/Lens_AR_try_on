@@ -1,8 +1,8 @@
 {
-  "name": "@lastcode802/glassarview",
+  "name": "@bonthus/glassarview",
   "version": "0.1.6",
-  "description": "A custom lib for Glasses Ar View",
-  "author": "lastcode802",
+  "description": "Virtual Try-On Widget for Bonthus Opticals",
+  "author": "Bonthus Opticals",
   "main": "./lib/index.js",
   "directories": {
     "lib": "lib"
@@ -18,10 +18,6 @@
     "Augmented Reality",
     "AR"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lastcode802/glassarview"
-  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -37,7 +33,7 @@
     "typescript": "^4.8.3",
     "web-vitals": "^2.1.4"
   },
-  "homepage": "https://lastcode802.github.io/glassarview/",
+  "homepage": ".",
   "scripts": {
     "start": "react-scripts start",
     "react_build": "react-scripts build",
@@ -109,9 +105,6 @@
     "prop-types": "^15.8.1",
     "rimraf": "^3.0.2",
     "webpack": "^5.74.0"
-  },
-  "bugs": {
-    "url": "https://github.com/lastcode802/glassarview/issues"
   },
   "license": "ISC",
   "publishConfig": {

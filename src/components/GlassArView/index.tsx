@@ -14,7 +14,13 @@ export interface GlassArViewProps {
   buttonFontColor?: string;
 }
 
+let isInitialising = false;
+let isReady = false;
+
 function initWidget(placeHolder: any, canvas: undefined, toggleLoading: { (isLoadingVisible: any): void; bind?: any; }) {
+  if (isInitialising) return;
+  isInitialising = true;
+  isReady = false;
   JEELIZVTOWIDGET.start({
     placeHolder,
     canvas,
@@ -30,7 +36,9 @@ function initWidget(placeHolder: any, canvas: undefined, toggleLoading: { (isLoa
     // searchImageColor: 0xeeeeee, // color of loading (face not found) animation
     // searchImageRotationSpeed: -0.001, // negative -> clockwise
     callbackReady: function () {
-      console.log('INFO: JEELIZVTOWIDGET is ready :)');
+      isInitialising = false;
+      isReady = true;
+      console.log('INFO: Bonthus Virtual Try-on ready');
     },
     onError: function (errorLabel: string) { // this function catches errors, so you can display custom integrated messages
       alert('An error happened. errorLabel =' + errorLabel)
@@ -71,7 +79,9 @@ export function GlassArView(this: any, props: GlassArViewProps) {
 
 
   const toggleLoading = (isLoadingVisible: any) => {
-    refLoading.current.style.display = (isLoadingVisible) ? 'block' : 'none';
+    if (refLoading.current) {
+      refLoading.current.style.display = (isLoadingVisible) ? 'block' : 'none';
+    }
   }
 
   const StartadjustMode = () => {
@@ -100,6 +110,14 @@ export function GlassArView(this: any, props: GlassArViewProps) {
 
   useEffect(() => {
     SetismodalName(props.modelname);
+    // Automatically load the model when the prop changes, only if ready
+    if (isReady && JEELIZVTOWIDGET) {
+      try {
+        JEELIZVTOWIDGET.load(props.modelname);
+      } catch (e) {
+        console.error("Error loading model:", e);
+      }
+    }
   }, [props.modelname]);
   useEffect(() => {
     Setisheight(props.canvasheight);
@@ -117,7 +135,7 @@ export function GlassArView(this: any, props: GlassArViewProps) {
     <div className='JeelizVTOWidgetContainer' >
       <div ref={refPlaceHolder} className='JeelizVTOWidget' style={{ height: isheight, width: iswidth }}>
         <canvas ref={refCanvas} className='JeelizVTOWidgetCanvas'></canvas>
-       
+
 
         <div ref={refLoading} className='JeelizVTOWidgetLoading'>
           <div className='JeelizVTOWidgetLoadingText'>
@@ -127,35 +145,35 @@ export function GlassArView(this: any, props: GlassArViewProps) {
 
       </div>
       <div className='JeelizVTOWidgetButtonContainer'>
-          {
-            adjustMode && (
-              <div className='JeelizVTOWidgetAdjustNoticeContainer' >
-                <div className='JeelizVTOWidgetAdjustNotice'>
-                  Move the glasses to adjust them.
-                </div>
-                <div className='JeelizVTOWidgetControls'>
-                  <ControlButton color={buttonFontColor} backgroundColor={buttonBackgroundColor} onClick={ExitadjustMode}>
-                    Quit
-                  </ControlButton>
-                </div>
+        {
+          adjustMode && (
+            <div className='JeelizVTOWidgetAdjustNoticeContainer' >
+              <div className='JeelizVTOWidgetAdjustNotice'>
+                Move the glasses to adjust them.
               </div>
-            )
-          }
-          {
-            !adjustMode && (
-              <>
-                <div className='JeelizVTOWidgetControls'>
-                  <ControlButton color={buttonFontColor} backgroundColor={buttonBackgroundColor} onClick={StartadjustMode}>
-                    Adjust
-                  </ControlButton>
-                </div>
-                <div className='JeelizVTOWidgetControls JeelizVTOWidgetChangeModelContainer'>
-                  <ControlButton color={buttonFontColor} backgroundColor={buttonBackgroundColor} onClick={SetglassesModel.bind(this, ismodalName)}>Model </ControlButton>
-                </div>
-              </>
-            )
-          }
-        </div>
+              <div className='JeelizVTOWidgetControls'>
+                <ControlButton color={buttonFontColor} backgroundColor={buttonBackgroundColor} onClick={ExitadjustMode}>
+                  Quit
+                </ControlButton>
+              </div>
+            </div>
+          )
+        }
+        {
+          !adjustMode && (
+            <>
+              <div className='JeelizVTOWidgetControls'>
+                <ControlButton color={buttonFontColor} backgroundColor={buttonBackgroundColor} onClick={StartadjustMode}>
+                  Adjust
+                </ControlButton>
+              </div>
+              <div className='JeelizVTOWidgetControls JeelizVTOWidgetChangeModelContainer'>
+                <ControlButton color={buttonFontColor} backgroundColor={buttonBackgroundColor} onClick={SetglassesModel.bind(this, ismodalName)}>Model </ControlButton>
+              </div>
+            </>
+          )
+        }
+      </div>
     </div>
   )
 }
