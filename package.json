@@ -37,10 +37,11 @@
   "scripts": {
     "start": "react-scripts start",
     "react_build": "react-scripts build",
+    "build:lib": "tsc --build ./tsconfig.json && npm run copy-files",
     "start_publish": "np --yolo --any-branch",
     "clean": "rimraf lib/",
     "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css lib/",
-    "build": "tsc --build ./tsconfig.json && npm run copy-files",
+    "build": "react-scripts build",
     "test": "react-scripts test --coverage ./src",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
